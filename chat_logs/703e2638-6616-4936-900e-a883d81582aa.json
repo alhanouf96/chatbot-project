@@ -1,0 +1,10 @@
+[
+    {
+        "role": "user",
+        "content": "tell me  a jok"
+    },
+    {
+        "role": "assistant",
+        "content": "Why couldn't the bicycle stand up by itself? Because it was two-tired!"
+    }
+]
