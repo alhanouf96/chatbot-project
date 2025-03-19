@@ -17,7 +17,7 @@
 mono_crash.*
 
 #secret
-chroma_db/
+chroma_db/ 
 pdf_store/
 chat_logs/
 
