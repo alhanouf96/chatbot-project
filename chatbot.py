@@ -153,9 +153,8 @@ with st.sidebar:
 
         st.button("Delete Chat", on_click=delete_chat)
 
-
-st.title("Chatbot Application 6.3 try two here we gooo")
-
+# Main Content
+st.title("Chatbot Application")
 
 if st.session_state["current_chat"]:
     chat_id = st.session_state["current_chat"]
@@ -212,4 +211,3 @@ if st.session_state["current_chat"]:
                 save_chat_to_db(chat_id, chat_name, current_chat["messages"], current_chat["pdf_name"], current_chat["pdf_path"], current_chat["pdf_uuid"])
 else:
     st.write("No chat selected. Use the sidebar to create or select a chat.")
-
