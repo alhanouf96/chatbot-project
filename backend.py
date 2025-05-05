@@ -46,7 +46,7 @@ llm = ChatOpenAI(model=model)
 
 # LangChain setup
 embedding_function = OpenAIEmbeddings()
-chroma_client = chromadb.HttpClient(host='localhost', port=8000)
+chroma_client = chromadb.HttpClient(host='10.0.2.5', port=8000)
 collection = chroma_client.get_or_create_collection("langchain")
 vectorstore = Chroma(
     client=chroma_client,
