@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Check if the correct number of arguments is provided
-if [ $# -ne 5 ]; then
-    echo "Usage: $0 <PAT_token> <repo_url> <branch_name> <password> <DB_host>"
+if [ $# -ne 7 ]; then
+    echo "Usage: $0 <PAT_token> <repo_url> <branch_name> <db_host> <target_db> <db_username> <db_password>"
     exit 1
 fi
 
@@ -10,30 +10,39 @@ fi
 PAT_TOKEN="$1"
 REPO_URL="$2"
 BRANCH_NAME="$3"
-PASSWORD="$4"
+DB_HOST="$4"
+TARGET_DB="$5"
+DB_USERNAME="$6"
+DB_PASSWORD="$7"
 REPO_NAME=$(basename "$REPO_URL" .git)
 USER=$(whoami)
 HOME_DIR=$(eval echo ~$USER)
-DB_HOST="$5"
+
+# Database names
+DEFAULT_DB="postgres"
 
 # Set up PostgreSQL database
 echo "Setting up database..."
-echo "$DB_HOST:5432:postgres:azureadmin:$PASSWORD" > $HOME/.pgpass
-chmod 600 $HOME/.pgpass
-if ! sudo -u postgres psql -lqt | cut -d \| -f 1 | grep -qw project; then
-    sudo -u postgres psql -c "CREATE DATABASE project"
-else
-    echo "Database 'project' already exists"
-fi
-sudo -u postgres psql -d project -c "CREATE TABLE IF NOT EXISTS advanced_chats (
-    id TEXT PRIMARY KEY,
-    name TEXT NOT NULL,
-    file_path TEXT NOT NULL,
-    last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    pdf_path TEXT,
-    pdf_name TEXT,
-    pdf_uuid TEXT
-);"
+
+# Step 1: Create the 'TARGET_DB' database
+echo "Creating the $TARGET_DB database..."
+psql "host=$DB_HOST port=5432 dbname=$DEFAULT_DB user=$DB_USERNAME password=$DB_PASSWORD sslmode=require" \
+    -c "CREATE DATABASE $TARGET_DB;" 2>/dev/null || echo "Database '$TARGET_DB' already exists."
+
+# Step 2: Create the 'advanced_chats' table in the 'TARGET_DB' database
+echo "Creating the 'advanced_chats' table in the $TARGET_DB database..."
+psql "host=$DB_HOST port=5432 dbname=$TARGET_DB user=$DB_USERNAME password=$DB_PASSWORD sslmode=require" \
+    -c "CREATE TABLE IF NOT EXISTS advanced_chats (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        file_path TEXT NOT NULL,
+        last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        pdf_path TEXT,
+        pdf_name TEXT,
+        pdf_uuid TEXT
+    );"
+
+echo "Database and table setup completed successfully."
 
 # Set up Conda environment
 echo "Setting up conda environment..."
@@ -67,21 +76,6 @@ fi
 
 # Create systemd services
 echo "Creating systemd services..."
-cat <<EOF | sudo tee /etc/systemd/system/chromadb.service
-[Unit]
-Description=ChromaDB
-After=network.target
-
-[Service]
-Type=simple
-User=$USER
-WorkingDirectory=$HOME_DIR/$REPO_NAME
-ExecStart=$HOME_DIR/miniconda3/envs/project/bin/chroma run --path $HOME_DIR/$REPO_NAME/chroma_db
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-EOF
 
 cat <<EOF | sudo tee /etc/systemd/system/backend.service
 [Unit]
