@@ -35,12 +35,12 @@ jobs:
           source venv/bin/activate
 
       - name: Install dependencies
-        run: pip install -r requirements.txt --target=".python_packages/lib/site-packages"
+        run: pip install -r requirements.txt
 
       # Optional: Add step to run tests here
 
       - name: Zip artifact for deployment
-        run: zip -r release.zip ./* .python_packages/*
+        run: zip release.zip ./* -r
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -48,6 +48,7 @@ jobs:
           name: python-app
           path: |
             release.zip
+            !venv/
 
   deploy:
     runs-on: ubuntu-latest
@@ -64,17 +65,13 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip     
-       
+        
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_7276E3B4559A47E8A9C95EBDE245992A }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_16403D171E464EFCA5E752C52D6791DC }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_7CC6DEFEF97A45A7AC77EECB276D8D81 }}
-     - name: Set Application Settings
-        run: |
-          az functionapp config appsettings set --name fuanctionapphanouf --resource-group group10 --settings "FUNCTIONS_WORKER_RUNTIME=python" "KEY_VAULT_NAME=our-key-vault38b7f0cb" "APPINSIGHTS_INSTRUMENTATIONKEY=azurerm_application_insights.ai.instrumentation_key"
-
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_EB5E9F926A91465BB7EC5A75FF519FCB }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_FAD6315E200B4D18B5D080FB19B42E7A }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_78A16D01E5ED4259A344B1516AA3F14B }}
 
       - name: 'Deploy to Azure Functions'
         uses: Azure/functions-action@v1
@@ -83,6 +80,4 @@ jobs:
           app-name: 'fuanctionapphanouf'
           slot-name: 'Production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-          scm-do-build-during-deployment: true
-          enable-oryx-build: true
           
