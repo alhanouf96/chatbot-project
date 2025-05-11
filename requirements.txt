@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+python-dotenv
+psycopg2-binary
+langchain-community==0.3.22
+langchain-openai==0.3.14
+langchain-chroma==0.2.3
+langchain==0.3.24
+langchain-core==0.3.55
+chromadb-client==1.0.6
+azure-storage-blob
+azure-cosmos
+azure-identity
+azure-keyvault-secrets
+pypdf
+python-multipart
+cryptography==41.0.2
