@@ -35,12 +35,12 @@ jobs:
           source venv/bin/activate
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requirements.txt --target=".python_packages/lib/site-packages"
 
       # Optional: Add step to run tests here
 
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+        run: zip -r release.zip ./* .python_packages/*
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -48,7 +48,7 @@ jobs:
           name: python-app
           path: |
             release.zip
-            !venv/
+            
 
   deploy:
     runs-on: ubuntu-latest
@@ -72,6 +72,9 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_3F46360E4A7F4DA59BAF27BE54A7BA52 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_97F2BF8EB1D54309A4FB7AAD5F2F2779 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_4A33F43BEFDA4F579790107EB04E2874 }}
+      - name: Set Application Settings
+        run: |
+          az functionapp config appsettings set --name funactionhanoufibra --resource-group stage10 --settings "FUNCTIONS_WORKER_RUNTIME=python" "KEY_VAULT_NAME=our-key-vault38447dff" "APPINSIGHTS_INSTRUMENTATIONKEY=azurerm_application_insights.ai.instrumentation_key"
 
       - name: 'Deploy to Azure Functions'
         uses: Azure/functions-action@v1
@@ -80,4 +83,6 @@ jobs:
           app-name: 'funactionhanoufibra'
           slot-name: 'Production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          scm-do-build-during-deployment: true
+          enable-oryx-build: true
           
