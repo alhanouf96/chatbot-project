@@ -12,7 +12,7 @@ on:
 
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
-  PYTHON_VERSION: '3.11' # set this to the python version to use (supports 3.6, 3.7, 3.8)
+  PYTHON_VERSION: '3.9' # set this to the python version to use (supports 3.6, 3.7, 3.8)
 
 jobs:
   build:
@@ -48,7 +48,6 @@ jobs:
           name: python-app
           path: |
             release.zip
-            
 
   deploy:
     runs-on: ubuntu-latest
@@ -69,10 +68,11 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_C9CA4294685D4326992DCFFAAE1CFE45 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_D3C65592365F4469AF9149A0945FCFD8 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_4E50F0A708AB4E5BA23BA274E1A2110F }}
-     - name: Set Application Settings
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_D31EDE26BD6D4A1391C44A451EF851EA }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_90E0A5392E9147188D6B82DEE7AFBB4C }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C3C70ED0B816419CBE553DDB5599E4AD }}
+
+      - name: Set Application Settings
         run: |
           az functionapp config appsettings set --name hanouffunctionappnew --resource-group group10 --settings "FUNCTIONS_WORKER_RUNTIME=python" "KEY_VAULT_NAME=our-key-vault38b7f0cb" "APPINSIGHTS_INSTRUMENTATIONKEY=azurerm_application_insights.ai.instrumentation_key"
 
@@ -80,9 +80,10 @@ jobs:
         uses: Azure/functions-action@v1
         id: deploy-to-function
         with:
-          app-name: 'hanouffunctionappnew'
+          app-name: 'backend-service-2025'
           slot-name: 'Production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
           scm-do-build-during-deployment: true
           enable-oryx-build: true
+          
           
