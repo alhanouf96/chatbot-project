@@ -2,6 +2,22 @@ import streamlit as st
 import uuid
 import requests
 
+st.markdown("""
+    <style>
+        .stApp {
+            background-color: #cceeff;  /* blue sky */
+        }
+        section.main > div {
+            background-color: #e0f7e9;  /* light green box background */
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .css-1d391kg {  /* text color override */
+            color: #003366;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 # Backend URLs define
 LOAD_CHAT_URL = "http://127.0.0.1:5000/load_chat/"
 SAVE_CHAT_URL = "http://127.0.0.1:5000/save_chat/"
