@@ -4,19 +4,69 @@ import requests
 
 st.markdown("""
     <style>
+        /* Global background and text */
         .stApp {
-            background-color: #cceeff;  /* blue sky */
+            background-color: #cceeff; /* Sky blue */
+            color: #003366; /* Dark blue text */
         }
-        section.main > div {
-            background-color: #e0f7e9;  /* light green box background */
-            border-radius: 10px;
-            padding: 20px;
+
+        /* Sidebar styling */
+        [data-testid="stSidebar"] {
+            background-color: #e0f7e9; /* Light green */
+            border-right: 2px solid #3BB143;
         }
-        .css-1d391kg {  /* text color override */
-            color: #003366;
+
+        /* Sidebar title and input */
+        .stSidebar h1, .stSidebar h2, .stSidebar h3 {
+            color: #004d00;
         }
+
+        /* Chat messages */
+        .stChatMessage {
+            background-color: #ffffff44;
+            border-radius: 12px;
+            padding: 10px;
+        }
+
+        /* Buttons */
+        .stButton > button {
+            background-color: #3BB143;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5em 1em;
+        }
+
+        .stButton > button:hover {
+            background-color: #2a8c32;
+        }
+
+        /* Inputs */
+        input, textarea {
+            background-color: #f0fff4 !important;
+            color: #003366 !important;
+        }
+
+        /* Title */
+        .stTitle {
+            color: #005f99;
+        }
+
+        /* Subheader */
+        .stSubheader {
+            color: #006633;
+        }
+
+        /* Chat input box */
+        textarea[aria-label="Your Message:"] {
+            background-color: #ffffff !important;
+            border: 1px solid #3BB143;
+            border-radius: 8px;
+        }
+
     </style>
 """, unsafe_allow_html=True)
+
 
 # Backend URLs define
 LOAD_CHAT_URL = "http://127.0.0.1:5000/load_chat/"
