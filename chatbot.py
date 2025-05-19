@@ -113,7 +113,7 @@ load_chats_from_db()
 # st.write(st.session_state)
 # Sidebar
 with st.sidebar:
-    st.image("assets/sdalogo.png", use_container_width=True) 
+    
     st.title("Chat Management")
 
     uploaded_pdf = st.file_uploader("Upload PDF", type="pdf", key="pdf_uploader")
@@ -155,7 +155,7 @@ with st.sidebar:
         st.button("Delete Chat", on_click=delete_chat)
 
 # Main Content
-st.title("Chatbot Application update")
+st.title("Chatbot Application")
 
 if st.session_state["current_chat"]:
     chat_id = st.session_state["current_chat"]
