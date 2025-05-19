@@ -113,6 +113,7 @@ load_chats_from_db()
 # st.write(st.session_state)
 # Sidebar
 with st.sidebar:
+    st.image("assets/sdalogo.png", use_container_width=True) 
     st.title("Chat Management")
 
     uploaded_pdf = st.file_uploader("Upload PDF", type="pdf", key="pdf_uploader")
